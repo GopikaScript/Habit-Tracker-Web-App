@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Habit Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-top: 20px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #4a90e2;
+      font-weight: 400;
+      font-size: 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeSlideUp 1s ease-out 0.5s forwards;
+    }
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .container {
+      margin: 30px auto;
+      max-width: 700px;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 60%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #357ab8;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f0f4f8;
+    }
+    .progress {
+      margin-top: 10px;
+      height: 20px;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: #4caf50;
+      width: 0;
+      transition: width 0.5s;
+    }
+    .delete-btn {
+      background-color: #e74c3c;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Habit Tracker</h1>
+  <h2 class="subtitle">Plan. Tick. Progress.</h2>
+  <div class="container">
+    <input type="text" id="habitInput" placeholder="Enter a habit..." />
+    <button onclick="addHabit()">Add Habit</button>
+    <table id="habitTable">
+      <thead>
+        <tr>
+          <th>Habit</th>
+          <th>Mon</th>
+          <th>Tue</th>
+          <th>Wed</th>
+          <th>Thu</th>
+          <th>Fri</th>
+          <th>Sat</th>
+          <th>Sun</th>
+          <th>Progress</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const habitInput = document.getElementById("habitInput");
+    const habitTableBody = document.querySelector("#habitTable tbody");
+
+    function loadHabits() {
+      const habits = JSON.parse(localStorage.getItem("habits")) || [];
+      habitTableBody.innerHTML = "";
+      habits.forEach((habit, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = \`
+          <td>\${habit.name}</td>
+          \${habit.days.map((checked, i) => \`<td><input type="checkbox" \${checked ? "checked" : ""} onchange="toggleDay(\${index}, \${i})"></td>\`).join("")}
+          <td><div class="progress"><div class="progress-bar" style="width: \${(habit.days.filter(Boolean).length / 7) * 100}%"></div></div></td>
+          <td><button class="delete-btn" onclick="deleteHabit(\${index})">X</button></td>
+        \`;
+        habitTableBody.appendChild(row);
+      });
+    }
+
+    function addHabit() {
+      const name = habitInput.value.trim();
+      if (!name) return;
+      const habits = JSON.parse(localStorage.getItem("habits")) || [];
+      habits.push({ name, days: [false, false, false, false, false, false, false] });
+      localStorage.setItem("habits", JSON.stringify(habits));
+      habitInput.value = "";
+      loadHabits();
+    }
+
+    function toggleDay(habitIndex, dayIndex) {
+      const habits = JSON.parse(localStorage.getItem("habits")) || [];
+      habits[habitIndex].days[dayIndex] = !habits[habitIndex].days[dayIndex];
+      localStorage.setItem("habits", JSON.stringify(habits));
+      loadHabits();
+    }
+
+    function deleteHabit(index) {
+      const habits = JSON.parse(localStorage.getItem("habits")) || [];
+      habits.splice(index, 1);
+      localStorage.setItem("habits", JSON.stringify(habits));
+      loadHabits();
+    }
+
+    window.onload = loadHabits;
+  </script>
+</body>
+</html>
