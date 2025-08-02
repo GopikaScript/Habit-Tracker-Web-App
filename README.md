@@ -4,11 +4,11 @@ A clean and responsive Habit Tracker app built using **HTML, CSS, and JavaScript
 
 ## 🚀 Features
 
-- ✅ Add & delete habits easily
-- 📅 Track habit status for each day of the week
-- 📊 Visual progress bar for motivation
-- 💾 Stores data in localStorage (no backend required)
-- 🎨 Animated subtitle and interactive UI
+- Add & delete habits easily
+- Track habit status for each day of the week
+- Visual progress bar for motivation
+- Stores data in localStorage (no backend required)
+- Animated subtitle and interactive UI
 
 ## 💡 How to Use
 
